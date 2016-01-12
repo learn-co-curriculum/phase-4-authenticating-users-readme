@@ -55,7 +55,7 @@ There's no way for the server to log you out right now. To log yourself out, you
 
 We'll make a very small login form for `new.html.erb`,
 
-```erb
+```html
     <form method='post'>
       <input name='username'>
       <input type='submit' value='login'>
