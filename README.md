@@ -4,7 +4,7 @@
 
 We've covered how cookies can be used to store data in a user's browser.
 
-One of the most common uses of cookies is for login. In this document, we'll cover how to the Rails session to log users in.
+One of the most common uses of cookies is for login. In this lesson, we'll cover how to the Rails session to log users in.
 
 ## Objectives
   1. Describe where session data is stored.
