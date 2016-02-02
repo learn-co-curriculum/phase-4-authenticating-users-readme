@@ -4,7 +4,7 @@
 
 We've covered how cookies can be used to store data in a user's browser.
 
-One of the most common uses of cookies is for login. In this lesson, we'll cover how to the Rails session to log users in.
+One of the most common uses of cookies is for login. In this lesson, we'll cover how to use the Rails session to log users in.
 
 ## Objectives
   1. Describe where session data is stored.
@@ -17,9 +17,9 @@ Nearly every website in the world use what I am going to call the "wristband" pa
 
 You arrive at the club. The bouncer checks your ID. They put a wristband on your wrist (or stamp your hand). They let you into the club.
 
-If you leave and come back, the bouncer doesn't look at your ID, they just look for your wristband. If you buy a drink, the bartender doesn't need to see your ID, since your wristband says if you're old enough to buy alcohol.
+If you leave and come back, the bouncer doesn't look at your ID, they just look for your wristband. If you buy a drink, the bartender doesn't need to see your ID, since your wristband proves you're old enough to buy alcohol.
 
-You arrive at [mail.google.com][http://mail.google.com]. You submit your username and password. Google's servers check to see if your credentials are correct. If they are, Google's servers issue a cookie to your browser. If you visit another page on gmail, or anywhere on google.com for that matter, your browser will show the cookie to the server. The server verifies this cookie, and lets you load your inbox.
+You arrive at [gmail.com](http://mail.google.com). You submit your username and password. Google's servers check to see if your credentials are correct. If they are, Google's servers issue a cookie to your browser. If you visit another page on gmail, or anywhere on google.com for that matter, your browser will show the cookie to the server. The server verifies this cookie, and lets you load your inbox.
 
 ## How this looks in Rails
 
@@ -30,9 +30,10 @@ The flow will look like this:
    * The user GETs `/login`
    * The user enters their username. There is no password.
    * The user submits the form, POSTing to `/login`.
+   * In the create action of the `SessionsController` we set a cookie on the users browser by writing their username into the session hash.
    * Thereafter, the user is logged in. `session[:username]` will hold their username.
 
-Let's write a `SessionsController` to handle these routes. This is an ordinary Rails controller, which we can `rails generate`. This controller has two methods, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`.
+Let's write a `SessionsController` to handle these routes. This controller has two actions, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`.
 
 Typically, your `new` method would look up a user in the database, verify their login credentials, and then store the authenticated user's id in the session.
 
@@ -64,7 +65,7 @@ We'll make a very small login form for `new.html.erb`,
 
 Ordinarily, we would use `form_for @user`, but in this example, we don't have a user model at all!
 
-And that's the whole of it. When the user submits the form, they'll be logged in.
+When the user submits the form, they'll be logged in!
 
 ## Logging out
 
@@ -78,7 +79,7 @@ The log out flow is even simpler. We add a `SessionsController#destroy` method, 
 
 The most common way to route this action is to `post '/logout'`. This means that our logout link will actually be a submit button that we style to look like a link.
 
-It's tempting, but don't attach this to a `get` route. HTTP specifies that `get` routes don't change anything—logging out is definitely changing something. You don't actually want someone to be able to put a link to `http://www.yoursite.com/logout` in an email or message board post. It's not a security flaw, but it's pretty annoying to be logged out because of mailing list hijinks. Ask me how I know.
+It's tempting, but don't attach this to a `get` route. HTTP specifies that `get` routes don't change anything—logging out is definitely changing something. You don't actually want someone to be able to put a link to `http://www.yoursite.com/logout` in an email or message board post. It's not a security flaw, but it's pretty annoying to be logged out because of mailing list hijinks.
 
 ## Conclusion
 
