@@ -13,7 +13,7 @@ One of the most common uses of cookies is for login. In this lesson, we'll cover
 
 ## How login works on the web
 
-Nearly every website in the world use what I am going to call the "wristband" pattern. A lot of nightclubs use this pattern as well.
+Nearly every website in the world uses what I am going to call the "wristband" pattern. A lot of nightclubs use this pattern as well.
 
 You arrive at the club. The bouncer checks your ID. They put a wristband on your wrist (or stamp your hand). They let you into the club.
 
