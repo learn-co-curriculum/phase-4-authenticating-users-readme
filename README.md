@@ -1,4 +1,4 @@
-# The Sessions Controller
+# Sessions Controller
 
 ## Overview
 
@@ -30,7 +30,7 @@ The flow will look like this:
    * The user GETs `/login`
    * The user enters their username. There is no password.
    * The user submits the form, POSTing to `/login`.
-   * In the create action of the `SessionsController` we set a cookie on the users browser by writing their username into the session hash.
+   * In the create action of the `SessionsController` we set a cookie on the user's browser by writing their username into the session hash.
    * Thereafter, the user is logged in. `session[:username]` will hold their username.
 
 Let's write a `SessionsController` to handle these routes. This controller has two actions, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`.
@@ -40,16 +40,16 @@ Typically, your `new` method would look up a user in the database, verify their 
 We're not going to do any of that right now. Our sessions controller is just going to trust that you are who you say you are.
 
 ```ruby
-    class SessionsController < ApplicationController
-      def new
-        # nothing to do here!
-      end
+class SessionsController < ApplicationController
+	def new
+		# nothing to do here!
+	end
 
-      def create
-        session[:username] = params[:username]
-	redirect '/'
-      end
-    end
+	def create
+		session[:username] = params[:username]
+		redirect '/'
+	end
+end
 ```
 
 There's no way for the server to log you out right now. To log yourself out, you'll have to delete the cookie from your browser.
@@ -57,10 +57,10 @@ There's no way for the server to log you out right now. To log yourself out, you
 We'll make a very small login form for `new.html.erb`,
 
 ```html
-    <form method='post'>
-      <input name='username'>
-      <input type='submit' value='login'>
-    </form>
+<form method='post'>
+  <input name='username'>
+  <input type='submit' value='login'>
+</form>
 ```
 
 Ordinarily, we would use `form_for @user`, but in this example, we don't have a user model at all!
@@ -72,9 +72,9 @@ When the user submits the form, they'll be logged in!
 The log out flow is even simpler. We add a `SessionsController#destroy` method, which will clear the username out of the session.
 
 ```ruby
-    def destroy
-      session.delete :username
-    end
+def destroy
+  session.delete :username
+end
 ```
 
 The most common way to route this action is to `post '/logout'`. This means that our logout link will actually be a submit button that we style to look like a link.
@@ -89,3 +89,5 @@ At its base, login is very simple: the user provides you with credentials in a P
   * [Rails Tutorial Chapter 8 — Log in, log out][log_in_log_out]
 
 [log_in_log_out]: https://www.railstutorial.org/book/log_in_log_out
+
+<p data-visibility='hidden'>View <a href='https://learn.co/lessons/sessions_controller_readme' title='Sessions Controller'>Sessions Controller</a> on Learn.co and start learning to code for free.</p>
