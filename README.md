@@ -35,7 +35,7 @@ The flow will look like this:
 
 Let's write a `SessionsController` to handle these routes. This controller has two actions, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`.
 
-Typically, your `new` method would look up a user in the database, verify their login credentials, and then store the authenticated user's id in the session.
+Typically, your `create` method would look up a user in the database, verify their login credentials, and then store the authenticated user's id in the session.
 
 We're not going to do any of that right now. Our sessions controller is just going to trust that you are who you say you are.
 
