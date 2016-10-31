@@ -89,5 +89,3 @@ At its base, login is very simple: the user provides you with credentials in a P
   * [Rails Tutorial Chapter 8 — Log in, log out](https://www.railstutorial.org/book/basic_login)
 
 <p data-visibility='hidden'>View <a href='https://learn.co/lessons/sessions_controller_readme' title='Sessions Controller'>Sessions Controller</a> on Learn.co and start learning to code for free.</p>
-
-<p class='util--hide'>View <a href='https://learn.co/lessons/sessions_controller_readme'>Sessions Controller</a> on Learn.co and start learning to code for free.</p>
