@@ -33,7 +33,14 @@ The flow will look like this:
    * In the create action of the `SessionsController` we set a cookie on the user's browser by writing their username into the session hash.
    * Thereafter, the user is logged in. `session[:username]` will hold their username.
 
-Let's write a `SessionsController` to handle these routes. This controller has two actions, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`.
+Let's write a `SessionsController` to handle these routes. This controller has two actions, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`. They will look like the below syntax:
+
+```ruby
+get “/login”, to: “sessions#new”
+```
+```ruby
+post “/login”, to: “sessions#create”
+```
 
 Typically, your `create` method would look up a user in the database, verify their login credentials, and then store the authenticated user's id in the session.
 
