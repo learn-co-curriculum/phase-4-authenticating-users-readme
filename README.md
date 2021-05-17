@@ -1,8 +1,9 @@
-# Sessions Controller
+# Authenticating Users
 
 ## Learning Goals
 
-- Understand how login works on most websites
+- Define the term "authentication"
+- Understand how websites use login to authenticate users
 - Follow REST conventions for handling session data
 
 ## Introduction
