@@ -12,7 +12,7 @@ We've covered how cookies can be used to store data in a user's browser.
 One of the most common uses of cookies is for login. In this lesson, we'll cover
 how to use the Rails session to log users in.
 
-## How Login Works
+## Authentication
 
 Nearly every website in the world uses what we like to call the "wristband"
 pattern. A lot of nightclubs use this pattern as well.
@@ -30,6 +30,10 @@ are, Google's servers issue a cookie to your browser. If you visit another page
 on gmail, or anywhere on google.com for that matter, your browser will show the
 cookie to the server. The server verifies this cookie, and lets you load your
 inbox.
+
+The term we use to describe this process is **authentication**. When we talk
+about authentication in our applications, we are describing how our application
+can **confirm that our users are who they say they are**.
 
 ## How This Looks in Rails
 
