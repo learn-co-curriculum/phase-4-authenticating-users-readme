@@ -1,93 +1,148 @@
 # Sessions Controller
 
-## Overview
+## Learning Goals
+
+- Understand how login works on most websites
+- Follow REST conventions for handling session data
+
+## Introduction
 
 We've covered how cookies can be used to store data in a user's browser.
 
-One of the most common uses of cookies is for login. In this lesson, we'll cover how to use the Rails session to log users in.
+One of the most common uses of cookies is for login. In this lesson, we'll cover
+how to use the Rails session to log users in.
 
-## Objectives
-  1. Describe where session data is stored.
-  2. Create a `Sessions` controller in Rails.
-  2. Log a user in with it.
+## How Login Works
 
-## How login works on the web
+Nearly every website in the world uses what we like to call the "wristband"
+pattern. A lot of nightclubs use this pattern as well.
 
-Nearly every website in the world uses what I am going to call the "wristband" pattern. A lot of nightclubs use this pattern as well.
+You arrive at the club. The bouncer checks your ID. They put a wristband on your
+wrist (or stamp your hand). They let you into the club.
 
-You arrive at the club. The bouncer checks your ID. They put a wristband on your wrist (or stamp your hand). They let you into the club.
+If you leave and come back, the bouncer doesn't look at your ID, they just look
+for your wristband. If you buy a drink, the bartender doesn't need to see your
+ID, since your wristband proves you're old enough to buy alcohol.
 
-If you leave and come back, the bouncer doesn't look at your ID, they just look for your wristband. If you buy a drink, the bartender doesn't need to see your ID, since your wristband proves you're old enough to buy alcohol.
+You arrive at [gmail.com](http://mail.google.com). You submit your username and
+password. Google's servers check to see if your credentials are correct. If they
+are, Google's servers issue a cookie to your browser. If you visit another page
+on gmail, or anywhere on google.com for that matter, your browser will show the
+cookie to the server. The server verifies this cookie, and lets you load your
+inbox.
 
-You arrive at [gmail.com](http://mail.google.com). You submit your username and password. Google's servers check to see if your credentials are correct. If they are, Google's servers issue a cookie to your browser. If you visit another page on gmail, or anywhere on google.com for that matter, your browser will show the cookie to the server. The server verifies this cookie, and lets you load your inbox.
+## How This Looks in Rails
 
-## How this looks in Rails
-
-Let's look at what the simplest possible login system might look like in Rails.
+Let's look at what the simplest possible login system might look like in a Rails
+API/React application.
 
 The flow will look like this:
 
-   * The user GETs `/login`
-   * The user enters their username. There is no password.
-   * The user submits the form, POSTing to `/login`.
-   * In the create action of the `SessionsController` we set a cookie on the user's browser by writing their username into the session hash.
-   * Thereafter, the user is logged in. `session[:username]` will hold their username.
+- The user navigates to a login form on the React frontend
+- The user enters their username. There is no password (for now).
+- The user submits the form, POSTing to `/login` on the Rails backend.
+- In the create action of the `SessionsController` we set a cookie on the user's browser by writing their user ID into the session hash.
+- Thereafter, the user is logged in. `session[:user_id]` will hold their user ID.
 
-Let's write a `SessionsController` to handle these routes. This controller has two actions, `new` and `create`, which we'll map in `routes.rb` to `get` and `post` on `/login`. They will look like the below syntax:
+Let's write a `SessionsController` to handle these routes. This controller has
+one action, `create`, which we'll map in `routes.rb` for `POST` requests to
+`/login`:
 
-```ruby
-get “/login”, to: “sessions#new”
+```rb
+post "/login", to: "sessions#create"
 ```
-```ruby
-post “/login”, to: “sessions#create”
-```
 
-Typically, your `create` method would look up a user in the database, verify their login credentials, and then store the authenticated user's id in the session.
+Typically, your `create` method would look up a user in the database, verify
+their login credentials, and then store the authenticated user's id in the
+session:
 
-We're not going to do any of that right now. Our sessions controller is just going to trust that you are who you say you are.
-
-```ruby
+```rb
 class SessionsController < ApplicationController
-	def new
-		# nothing to do here!
-	end
-
-	def create
-		session[:username] = params[:username]
-		redirect_to '/'
-	end
+  def create
+    user = User.find_by(username: params[:username])
+    session[:user_id] = user.id
+    render json: user
+  end
 end
 ```
 
-There's no way for the server to log you out right now. To log yourself out, you'll have to delete the cookie from your browser.
+There's no way for the server to log you out right now. To log yourself out,
+you'll have to delete the cookie from your browser.
 
-We'll make a very small login form for `new.html.erb`,
+Here's what the login component might look like on the frontend:
 
-```html
-<form method='post'>
-  <input name='username'>
-  <input type='submit' value='login'>
-</form>
+```js
+function Login({ onLogin }) {
+  const [username, setUsername] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username }),
+    })
+      .then((r) => r.json())
+      .then((user) => onLogin(user));
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
 ```
 
-Ordinarily, we would use `form_for @user`, but in this example, we don't have a user model at all!
-
-When the user submits the form, they'll be logged in!
+When the user submits the form, they'll be logged in! Our `onLogin` callback function
+would handle saving the logged in user's details in state.
 
 ## Logging out
 
-The log out flow is even simpler. We add a `SessionsController#destroy` method, which will clear the username out of the session.
+The log out flow is even simpler. We can add a new route for logging out:
 
-```ruby
+```rb
+delete "/logout", to: "sessions#destroy"
+```
+
+Then add a `SessionsController#destroy` method, which will clear the username
+out of the session:
+
+```rb
 def destroy
-  session.delete :username
+  session.delete :user_id
+  head :no_content
 end
 ```
 
-The most common way to route this action is to `post '/logout'`. This means that our logout link will actually be a submit button that we style to look like a link.
+Here's how that might look in the frontend:
 
-It's tempting, but don't attach this to a `get` route. HTTP specifies that `get` routes don't change anything—logging out is definitely changing something. You don't actually want someone to be able to put a link to `http://www.yoursite.com/logout` in an email or message board post. It's not a security flaw, but it's pretty annoying to be logged out because of mailing list hijinks.
+```js
+function Navbar({ onLogout }) {
+  function handleLogout() {
+    fetch("/logout", {
+      method: "DELETE",
+    }).then(() => onLogout());
+  }
+
+  return (
+    <header>
+      <button onClick={handleLogout}>Logout</button>
+    </header>
+  );
+}
+```
 
 ## Conclusion
 
-At its base, login is very simple: the user provides you with credentials in a POST, you verify those credentials and set a token in the `session`. In this example, our token was literally the username the user typed. In a more complex app, it would most likely be their user id.
+At its base, login is very simple: the user provides you with credentials in a
+by filling out a form, you verify those credentials and set a token in the
+`session`. In this example, our token was their user id. We can also log users
+out by removing their user ID from the session.
