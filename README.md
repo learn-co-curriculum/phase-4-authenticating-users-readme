@@ -163,7 +163,7 @@ function App() {
   }, []);
 
   if (user) {
-    return <h1>Welcome, {user.username}!</h1>;
+    return <h2>Welcome, {user.username}!</h2>;
   } else {
     return <Login onLogin={setUser} />;
   }
