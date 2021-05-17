@@ -1,4 +1,4 @@
-# Authenticating Users
+# Authenticating Users Readme
 
 ## Learning Goals
 
