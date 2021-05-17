@@ -104,7 +104,71 @@ function Login({ onLogin }) {
 When the user submits the form, they'll be logged in! Our `onLogin` callback function
 would handle saving the logged in user's details in state.
 
-## Logging out
+## Staying Logged In
+
+Using the wristband analogy, in the example above, we've shown our ID at the
+door (`username`) and gotten our wristband (`session[:user_id]`) from the
+backend. So our backend has a means of identifying us with each request using
+the session hash.
+
+Our frontend also knows who we are, because our user data was saved in state after
+logging in.
+
+What happens now if we leave the club and try to come back in, by refreshing the
+page on the frontend? Well, our **frontend** doesn't know who we are any more,
+since we lose our frontend state after refreshing the page. Our **backend** does
+know who we are though &mdash; so we need a way of getting the user data from
+the backend into state when the page first loads.
+
+Here's how we might accomplish that. First, we need a route to retrieve the user's
+data from the database using the session hash:
+
+```rb
+get "/me", to: "users#show"
+```
+
+And a controller action:
+
+```rb
+class UsersController < ApplicationController
+  def show
+    user = User.find_by(id: session[:user_id])
+    if user
+      render json: user
+    else
+      render json: { error: "Not authorized" }, status: :unauthorized
+    end
+  end
+end
+```
+
+Then, we can try to log the user in from the frontend as soon as the application
+loads:
+
+```jsx
+function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch("/me").then((response) => {
+      if (response.ok) {
+        response.json().then((user) => setUser(user));
+      }
+    });
+  }, []);
+
+  if (user) {
+    return <h1>Welcome, {user.username}!</h1>;
+  } else {
+    return <Login onLogin={setUser} />;
+  }
+}
+```
+
+This is the equivalent of letting someone use their wristband to come back into
+the club.
+
+## Logging Out
 
 The log out flow is even simpler. We can add a new route for logging out:
 
