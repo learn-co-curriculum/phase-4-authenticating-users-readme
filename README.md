@@ -28,9 +28,9 @@ ID, since your wristband proves you're old enough to buy alcohol.
 You arrive at [gmail.com](http://mail.google.com). You submit your username and
 password. Google's servers check to see if your credentials are correct. If they
 are, Google's servers issue a cookie to your browser. If you visit another page
-on gmail, or anywhere on google.com for that matter, your browser will show the
-cookie to the server. The server verifies this cookie, and lets you load your
-inbox.
+on gmail — or anywhere on google.com for that matter — your browser will show
+the cookie to the server. The server verifies this cookie, and lets you load
+your inbox.
 
 The term we use to describe this process is **authentication**. When we talk
 about authentication in our applications, we are describing how our application
@@ -43,13 +43,14 @@ API/React application.
 
 The flow will look like this:
 
-- The user navigates to a login form on the React frontend
+- The user navigates to a login form on the React frontend.
 - The user enters their username. There is no password (for now).
 - The user submits the form, POSTing to `/login` on the Rails backend.
-- In the create action of the `SessionsController` we set a cookie on the user's browser by writing their user ID into the session hash.
+- In the create action of the `SessionsController` we set a cookie on the user's
+  browser by writing their user ID into the session hash.
 - Thereafter, the user is logged in. `session[:user_id]` will hold their user ID.
 
-Let's write a `SessionsController` to handle these routes. This controller has
+Let's write a `SessionsController` to handle our login route. This controller has
 one action, `create`, which we'll map in `routes.rb` for `POST` requests to
 `/login`:
 
@@ -122,8 +123,8 @@ logging in.
 What happens now if we leave the club and try to come back in, by refreshing the
 page on the frontend? Well, our **frontend** doesn't know who we are any more,
 since we lose our frontend state after refreshing the page. Our **backend** does
-know who we are though &mdash; so we need a way of getting the user data from
-the backend into state when the page first loads.
+know who we are though — so we need a way of getting the user data from the
+backend into state when the page first loads.
 
 Here's how we might accomplish that. First, we need a route to retrieve the user's
 data from the database using the session hash:
@@ -209,9 +210,12 @@ function Navbar({ onLogout }) {
 }
 ```
 
+The `onLogout` callback function would handle removing the information about the
+user from state.
+
 ## Conclusion
 
-At its base, login is very simple: the user provides you with credentials in a
-by filling out a form, you verify those credentials and set a token in the
+At its base, login is very simple: the user provides you with credentials by
+filling out a form, you verify those credentials and set a token in the
 `session`. In this example, our token was their user id. We can also log users
 out by removing their user ID from the session.
