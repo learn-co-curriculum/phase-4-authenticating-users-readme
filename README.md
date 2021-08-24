@@ -77,7 +77,7 @@ you'll have to delete the cookie from your browser.
 
 Here's what the login component might look like on the frontend:
 
-```js
+```jsx
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
 
@@ -194,7 +194,7 @@ end
 
 Here's how that might look in the frontend:
 
-```js
+```jsx
 function Navbar({ onLogout }) {
   function handleLogout() {
     fetch("/logout", {
