@@ -219,3 +219,13 @@ At its base, login is very simple: the user provides you with credentials by
 filling out a form, you verify those credentials and set a token in the
 `session`. In this example, our token was their user id. We can also log users
 out by removing their user ID from the session.
+
+## Check For Understanding
+
+Before you move on, make sure you can answer the following questions:
+
+1. In the login and authentication flow you learned in this lesson for Rails
+   API/React applications, in what two places is authentication information
+   stored?
+2. In the login and authentication flow you learned in this lesson, what
+   sequence of events happens if the user refreshes the page?
